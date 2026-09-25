@@ -1,0 +1,57 @@
+# tiny-cli-progress — LLM Manifest (llms.txt)
+
+> Zero-dependency progress bars and spinners for Python CLIs.
+> tqdm's API surface, ~250 LOC, no `colorama`, no `tqdm.auto`.
+
+## Identity
+- **Package:** `tiny-cli-progress`
+- **Latest version:** 0.1.0
+- **Python:** 3.9+
+- **Dependencies:** 0
+- **Repo:** https://github.com/hussain-alsaibai/tiny-cli-progress
+- **License:** MIT
+
+## What it solves
+tqdm is the de facto Python progress bar but it's ~3,000 LOC and pulls in
+`colorama` on Windows. tiny-cli-progress is a stdlib-only alternative for
+the tiny-* ecosystem: progress bars, spinners, multi-bar (parallel downloads),
+with auto-detection of non-TTY environments.
+
+## Public API
+- `progress(iterable, total=None, *, desc='', unit='it', disable=False, file=sys.stdout, min_interval=0.05, width=30, colour='green', force=False)` — wrap an iterable
+- `ProgressBar(total, *, desc='', unit='it', width=30, file=sys.stdout, min_interval=0.05, colour='green', disable=False, force=False)` — manual bar
+  - `.update(n=1)` — advance
+  - `.set_description(desc)` — change prefix
+  - `.close()` — finalize
+  - Context manager
+- `Spinner(message='', *, file=sys.stdout, interval=0.08)` — context manager, indeterminate activity indicator (Braille dots)
+- `MultiBar(file=sys.stdout, min_interval=0.05, force=False)` — concurrent named bars
+  - `.add(desc, total, **kwargs)` — returns a `ProgressBar`
+  - `.render()` — redraw all bars
+  - `.close()` — finalize all
+  - Context manager
+- `is_tty()` — True if stdout is a terminal
+
+## Quick start
+```python
+from tiny_cli_progress import progress, Spinner
+
+for item in progress(range(1000), desc="Loading"):
+    process(item)
+
+with Spinner("Connecting..."):
+    connect()
+```
+
+## Non-TTY behaviour
+Auto-detected. In non-TTY environments (CI logs, file output, redirected
+stdout), bars and spinners silently degrade so logs stay clean. Force-enable
+with `force=True` if you want progress output in a log file.
+
+Spinners in non-TTY: write `<message>...` then exit on context exit.
+
+## Sister libraries (OpenClaw tiny-* ecosystem)
+- `tiny-cli-table` — beautiful CLI tables
+- `tiny-cli` — argument parsing + agent output modes
+- `tiny-log` — structured logging
+- `tiny-secret-mask` — secret redaction
