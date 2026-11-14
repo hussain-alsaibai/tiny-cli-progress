@@ -24,7 +24,8 @@ with Spinner("Connecting..."):
 ## Install
 
 ```bash
-pip install tiny-cli-progress
+# From GitHub (recommended -- not yet on PyPI)
+pip install git+https://github.com/hussain-alsaibai/tiny-cli-progress.git
 ```
 
 ## Quick start
